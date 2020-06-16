@@ -7,9 +7,8 @@ from django_countries.fields import CountryField
 
 
 CATEGORY_CHOICES = (
-    ('S', 'Shirt'),
-    ('SW', 'Sport wear'),
-    ('OW', 'Outwear')
+    ('G', 'Groceries'),
+    ('D', 'Dairy')
 )
 
 LABEL_CHOICES = (
@@ -43,6 +42,7 @@ class Item(models.Model):
     slug = models.SlugField()
     description = models.TextField()
     image = models.ImageField()
+    quantity = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -123,7 +123,7 @@ class Order(models.Model):
     items = models.ManyToManyField(OrderItem)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
-    ordered = models.BooleanField(default=False)
+    ordered = models.BooleanField(default=False)  # what is the meaning of this
     shipping_address = models.ForeignKey(
         'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
     billing_address = models.ForeignKey(
@@ -158,6 +158,17 @@ class Order(models.Model):
         if self.coupon:
             total -= self.coupon.amount
         return total
+
+    def get_status(self):
+        status = self.ordered + self.being_delivered + self.received
+        if status == 0:
+            return "Not Ordered"
+        if status == 1:
+            return "Ordered + Processing"
+        elif status == 2:
+            return "Sent for delivery"
+        elif status == 3:
+            return "Delivered"
 
 
 class Address(models.Model):

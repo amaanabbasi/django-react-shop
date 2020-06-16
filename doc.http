@@ -1,0 +1,28 @@
+### Registration
+
+
+POST http://127.0.0.1:8000/auth/registration/
+Content-Type: application/json
+
+{
+    "username":"robot4",
+    "password1":"robot4",
+    "password2":"robot4",
+    "email":"robot4@gmail.com"
+}
+
+### Login
+POST http://127.0.0.1:8000/auth/login/
+Content-Type: application/json
+
+{
+    "username":"robot4",
+    "password":"robot4",
+    "email":"robot4@gmail.com"
+}
+
+### GET addresses of logged in user
+
+GET http://127.0.0.1:8000/api/addresses
+Content-Type: application/json
+Authorization:  Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b

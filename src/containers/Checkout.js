@@ -297,10 +297,10 @@ class CheckoutForm extends Component {
             onChange={this.handleSelectChange}
           />
         ) : (
-          <p>
-            You need to <Link to="/profile">add a billing address</Link>
-          </p>
-        )}
+            <p>
+              You need to <Link to="/profile">add a billing address</Link>
+            </p>
+          )}
         <Header>Select a shipping address</Header>
         {shippingAddresses.length > 0 ? (
           <Select
@@ -312,37 +312,37 @@ class CheckoutForm extends Component {
             onChange={this.handleSelectChange}
           />
         ) : (
-          <p>
-            You need to <Link to="/profile">add a shipping address</Link>
-          </p>
-        )}
+            <p>
+              You need to <Link to="/profile">add a shipping address</Link>
+            </p>
+          )}
         <Divider />
 
         {billingAddresses.length < 1 || shippingAddresses.length < 1 ? (
           <p>You need to add addresses before you can complete your purchase</p>
         ) : (
-          <React.Fragment>
-            <Header>Would you like to complete the purchase?</Header>
-            <CardElement />
-            {success && (
-              <Message positive>
-                <Message.Header>Your payment was successful</Message.Header>
-                <p>
-                  Go to your <b>profile</b> to see the order delivery status.
+            <React.Fragment>
+              <Header>Would you like to complete the purchase?</Header>
+              <CardElement />
+              {success && (
+                <Message positive>
+                  <Message.Header>Your payment was successful</Message.Header>
+                  <p>
+                    Go to your <b>profile</b> to see the order delivery status.
                 </p>
-              </Message>
-            )}
-            <Button
-              loading={loading}
-              disabled={loading}
-              primary
-              onClick={this.submit}
-              style={{ marginTop: "10px" }}
-            >
-              Submit
+                </Message>
+              )}
+              <Button
+                loading={loading}
+                disabled={loading}
+                primary
+                onClick={this.submit}
+                style={{ marginTop: "10px" }}
+              >
+                Submit
             </Button>
-          </React.Fragment>
-        )}
+            </React.Fragment>
+          )}
       </div>
     );
   }
@@ -352,7 +352,7 @@ const InjectedForm = withRouter(injectStripe(CheckoutForm));
 
 const WrappedForm = () => (
   <Container text>
-    <StripeProvider apiKey="">
+    <StripeProvider apiKey="pk_test_NsQFk8aKbH1bzvwBo7UETYn300zbFanouc">
       <div>
         <h1>Complete your order</h1>
         <Elements>

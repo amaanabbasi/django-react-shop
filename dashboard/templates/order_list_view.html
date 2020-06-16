@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="columns is-centered has-text-centered">
+    <div class="column is-half">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Search Orders
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Find a repository">
+                        </div>
+                        <div class="control">
+                            <a class="button is-info">
+                                Search
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            All Orders
+        </p>
+    </header>
+    <div class="card-content">
+        <div class="content">
+            <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+                <tbody>
+                    <thead>
+                        <tr>
+                            <th>order id</th>
+                            <th>Order Total</th>
+                            <th>Status</th>
+                            <th>Shipping Address</th>
+                            <th>Ordered Date</th>
+
+                        </tr>
+                    </thead>
+                    {% for order in orders %}
+                    <tr>
+                        <td width="5%">#{{order.id}}</td>
+                        <td>${{order.get_total}}</td>
+                        <td class="level-right"><a class="button is-small is-black" href="#">{{order.get_status}}</a>
+                        </td>
+                        <td> {{order.shipping_address.apartment_address}}, {{order.shipping_address.street_address }}
+                            {{order.shipping_address.zip}}</td>
+                        <td> {{order.ordered_date}} </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

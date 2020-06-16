@@ -374,6 +374,7 @@ def add_to_cart(request, slug):
         user=request.user,
         ordered=False
     )
+
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]

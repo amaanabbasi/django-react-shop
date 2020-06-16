@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.db.models import F
 from rest_framework.generics import (
     ListAPIView, RetrieveAPIView, CreateAPIView,
     UpdateAPIView, DestroyAPIView
@@ -41,6 +42,18 @@ class ItemDetailView(RetrieveAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ItemDetailSerializer
     queryset = Item.objects.all()
+
+
+def subtract_item_quantity(item, quantity):
+    item.quantity = F('quantity') - quantity
+    item.save(update_fields='quantity')
+
+
+def add_item_quantity(item):
+    """ Items removed from cart
+    """
+    item.quantity = F('quantity') + quantity
+    item.save(update_fields='quantity')
 
 
 class OrderQuantityUpdateView(APIView):
@@ -146,15 +159,17 @@ class OrderDetailView(RetrieveAPIView):
 class PaymentView(APIView):
 
     def post(self, request, *args, **kwargs):
+        import pdb
+        pdb.set_trace()
         order = Order.objects.get(user=self.request.user, ordered=False)
         userprofile = UserProfile.objects.get(user=self.request.user)
         token = request.data.get('stripeToken')
         billing_address_id = request.data.get('selectedBillingAddress')
         shipping_address_id = request.data.get('selectedShippingAddress')
-
         billing_address = Address.objects.get(id=billing_address_id)
         shipping_address = Address.objects.get(id=shipping_address_id)
-
+        import pdb
+        pdb.set_trace()
         if userprofile.stripe_customer_id != '' and userprofile.stripe_customer_id is not None:
             customer = stripe.Customer.retrieve(
                 userprofile.stripe_customer_id)
@@ -173,7 +188,7 @@ class PaymentView(APIView):
 
         try:
 
-                # charge the customer because we cannot charge the token more than once
+            # charge the customer because we cannot charge the token more than once
             charge = stripe.Charge.create(
                 amount=amount,  # cents
                 currency="usd",
