@@ -17,6 +17,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id',
                     'user',
                     'ordered',
+                    'ordered_date',
+                    'start_date',
                     'being_delivered',
                     'received',
                     'refund_requested',

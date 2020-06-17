@@ -44,18 +44,6 @@ class ItemDetailView(RetrieveAPIView):
     queryset = Item.objects.all()
 
 
-def subtract_item_quantity(item, quantity):
-    item.quantity = F('quantity') - quantity
-    item.save(update_fields='quantity')
-
-
-def add_item_quantity(item):
-    """ Items removed from cart
-    """
-    item.quantity = F('quantity') + quantity
-    item.save(update_fields='quantity')
-
-
 class OrderQuantityUpdateView(APIView):
     def post(self, request, *args, **kwargs):
         slug = request.data.get('slug', None)
@@ -156,11 +144,34 @@ class OrderDetailView(RetrieveAPIView):
             # return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
 
 
+def subtract_item_quantity_from_stock(item):
+    """ args item object of Class Order, Once the payment is made
+        the item's quantity should be deducted in the stock, So that 
+        we are not overselling.
+        item : item listed in order.
+        item_in_stock : Is the actual item in the stock.
+    """
+    try:
+        item_in_stock = Item.objects.get(id=item.item.id)
+        item_in_stock.quantity = F('quantity') - item.quantity
+        item_in_stock.save()
+
+    except Exception as e:
+        # send an email to ourselves
+        return Response({"message": "Error has occured during updating the stock quantity."}, status=HTTP_400_BAD_REQUEST)
+
+
+# def add_item_quantity(item):
+#     """ Items removed from cart
+#     """
+#     item.quantity = F('quantity') + quantity
+#     item.save(update_fields='quantity')
+
+
 class PaymentView(APIView):
 
     def post(self, request, *args, **kwargs):
-        import pdb
-        pdb.set_trace()
+
         order = Order.objects.get(user=self.request.user, ordered=False)
         userprofile = UserProfile.objects.get(user=self.request.user)
         token = request.data.get('stripeToken')
@@ -168,8 +179,7 @@ class PaymentView(APIView):
         shipping_address_id = request.data.get('selectedShippingAddress')
         billing_address = Address.objects.get(id=billing_address_id)
         shipping_address = Address.objects.get(id=shipping_address_id)
-        import pdb
-        pdb.set_trace()
+
         if userprofile.stripe_customer_id != '' and userprofile.stripe_customer_id is not None:
             customer = stripe.Customer.retrieve(
                 userprofile.stripe_customer_id)
@@ -220,8 +230,10 @@ class PaymentView(APIView):
             order.billing_address = billing_address
             order.shipping_address = shipping_address
             # order.ref_code = create_ref_code()
-            order.save()
 
+            subtract_item_quantity_from_stock(item)
+
+            order.save()
             return Response(status=HTTP_200_OK)
 
         except stripe.error.CardError as e:

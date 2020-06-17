@@ -6,3 +6,4 @@ build
 static
 media
 package-lock.json
+.env

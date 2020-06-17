@@ -42,7 +42,7 @@ class DashboardView(View):
 class OrderListView(View):
 
     def get(self, request):
-        orders = Order.objects.all()[::-1]
+        orders = Order.objects.all().filter(ordered=True)[::-1]
 
         context = {
             "orders": orders,
