@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,6 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.utils import timezone
+
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
 
@@ -35,7 +37,7 @@ def is_valid_form(values):
     return valid
 
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
@@ -205,7 +207,7 @@ class CheckoutView(View):
             return redirect("core:order-summary")
 
 
-class PaymentView(View):
+class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         if order.billing_address:
@@ -464,6 +466,12 @@ def get_coupon(request, code):
         return redirect("core:checkout")
 
 
+# class UserProfileView(LoginRequiredMixin, View):
+#     def get(self):
+#         user = get_object_or_404(UserProfile, id=self.request.user.id)
+
+#     return ren
+
 class AddCouponView(View):
     def post(self, *args, **kwargs):
         form = CouponForm(self.request.POST or None)
@@ -481,7 +489,15 @@ class AddCouponView(View):
                 return redirect("core:checkout")
 
 
-class RequestRefundView(View):
+class RequestRefundView(LoginRequiredMixin, View):
+    """
+    Allows a customer to create Refund request, this create will be sent on the admnin dashboard
+    from there it's up to the Admin as to whether to accept it or not. 'GrantedRefundView' is in the
+    'dashboard' app.
+
+    The Customer needs to send the order ref_code.
+    """
+
     def get(self, *args, **kwargs):
         form = RefundForm()
         context = {
@@ -492,12 +508,27 @@ class RequestRefundView(View):
     def post(self, *args, **kwargs):
         form = RefundForm(self.request.POST)
         if form.is_valid():
-            ref_code = form.cleaned_data.get('ref_code')
+            reference_code = form.cleaned_data.get('ref_code')
             message = form.cleaned_data.get('message')
             email = form.cleaned_data.get('email')
             # edit the order
+            user = User.objects.get(id=self.request.user.id)
+
             try:
-                order = Order.objects.get(ref_code=ref_code)
+                order = user.order_set.get(ref_code=reference_code)
+                if order.refund_refused == True:
+                    messages.info(
+                        self.request, f"This order cannot be refunded. Please Contact us for any query. #{order.ref_code}")
+                    return redirect("core:request-refund")
+                elif order.refund_requested == True:
+                    messages.success(
+                        self.request, f"Refund Request has already been sent for this order. #{order.ref_code}")
+                    return redirect("core:request-refund")
+                elif order.refund_granted == True:
+                    messages.warning(
+                        self.request, f"Refund already granted for this order. #{order.ref_code}")
+                    return redirect("core:request-refund")
+
                 order.refund_requested = True
                 order.save()
 

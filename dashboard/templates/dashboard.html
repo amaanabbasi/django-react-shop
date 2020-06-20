@@ -1,29 +1,36 @@
-{% extends 'layout.html' %}
+{% extends 'layout.html' %}{% load static %}
 {% block content %}
 <div class="columns">
     <div class="column">
         <section class="info-tiles">
             <div class="tile is-ancestor has-text-centered">
-                <div class="columns">
+                <div class="columns has-text-white">
                     <div class="column">
                         <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="is-2">{{total_orders}} Total Orders</p>
+                            <article class="tile has-background-link-dark is-child box has-text-white">
+                                <h1 class="title is-4 has-text-white "><i class="fa fa-object-group"
+                                        aria-hidden="true"></i>
+                                    {{total_orders}}</h1> Total Orders
                             </article>
                         </div>
                         <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="is-2">{{total_products}} Total Products</p>
+                            <article class="tile is-child has-background-primary-dark box has-text-white">
+                                <h1 class="title is-4 has-text-white"><i class="fa fa-product-hunt"
+                                        aria-hidden="true"></i>
+                                    {{total_products}}</h1> Total Products
                             </article>
                         </div>
                         <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="is-2">{{total_active_orders}} Active Orders</p>
+                            <article class="tile is-child box  has-background-danger-dark has-text-white">
+                                <h1 class="title is-4 has-text-white"><i class="fa fa-shopping-cart"
+                                        aria-hidden="true"></i>
+                                    {{total_active_orders}}</h1> Active Orders
                             </article>
                         </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="is-2">{{total_customers }} Total Customers</p>
+                        <div class="tile is-parent ">
+                            <article class="tile is-child box has-background-success has-text-white">
+                                <h1 class="title is-4 has-text-white"><i class="fa fa-users" aria-hidden="true"></i>
+                                    {{total_customers }}</h1> Total Customers
                             </article>
                         </div>
                     </div>
@@ -36,12 +43,19 @@
         <section class="hero is-info welcome is-small">
             <div class="hero-body">
                 <div class="container">
-                    <h1 class="title">
-                        Graph
-                    </h1>
                     <h2 class="subtitle">
-                        I hope you are having a great day!
+                        Recent Orders - Past 24 Hours - Demo Graphs
                     </h2>
+                    <hr />
+                    <div class="columns">
+                        <div class="column">
+                            <img src="{% static 'img/graph1.png' %}" width="100%">
+                        </div>
+                        <div class="column">
+                            <img src="{% static 'img/graph1.png' %}" width="100%">
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -51,9 +65,10 @@
 
 <div class="columns">
     <div class="column ">
-        <div class="card events-card">
+        <div class="card events-card has-background-white-ter">
             <header class="card-header">
                 <p class="card-header-title">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;
                     Orders - Last 24 hrs
                 </p>
                 <!-- <a href="#" class="card-header-icon" aria-label="more options">
@@ -64,37 +79,32 @@
             </header>
             <div class="card-table">
                 <div class="content">
-                    <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+                    <table class="table is-fullwidth is-bordered is-hoverable is-striped ">
                         <tbody>
                             <tr>
                                 <td>Total Orders</td>
-                                <td class="level-right">{{ total_orders }}</td>
-                            </tr>
-                            <tr>
-                                <td>Total lines</td>
-                                <td class="level-right">{{ total_orders }}</td>
+                                <td class="level-right">{{ total_past_24_hours_orders }}</td>
                             </tr>
                             <tr>
                                 <td>Total Revenue</td>
-                                <td class="level-right">{{ total_orders }}</td>
+                                <td class="level-right">${{ revenue_past_24_hours_orders }}</td>
                             </tr>
                             <tr>
                                 <td>Average order costs</td>
-                                <td class="level-right">{{ total_orders }}</td>
+                                <td class="level-right">${{average_revenue_24_hours}}</td>
                             </tr>
-
-
+                            <tr>
+                                <td>Total line</td>
+                                <td class="level-right">unidentified</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <footer class="card-footer">
-                <a href="#" class="card-footer-item">View All</a>
-            </footer>
         </div>
     </div>
-    <div class="column ">
-        <div class="card">
+    <div class="column">
+        <div class="card has-background-white-ter">
             <header class="card-header">
                 <p class="card-header-title">
                     Orders - All time
@@ -115,50 +125,27 @@
                         <td class="level-right">{{ total_orders }}</td>
                     </tr>
                     <tr>
-                        <td>Total lines</td>
-                        <td class="level-right">{{ total_orders }}</td>
-                    </tr>
-                    <tr>
                         <td>Total Revenue</td>
                         <td class="level-right">${{ total_revenue }}</td>
                     </tr>
                     <tr>
                         <td>Average order costs</td>
-                        <td class="level-right">{{ total_orders }}</td>
+                        <td class="level-right">${{average_total_revenue}}</td>
+                    </tr>
+                    <tr>
+                        <td>Total lines</td>
+                        <td class="level-right">unidentified</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    User Search
-                </p>
-                <a href="#" class="card-header-icon" aria-label="more options">
-                    <span class="icon">
-                        <i class="fa fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                </a>
-            </header>
-            <div class="card-content">
-                <div class="content">
-                    <div class="control has-icons-left has-icons-right">
-                        <input class="input is-large" type="text" placeholder="">
-                        <span class="icon is-medium is-left">
-                            <i class="fa fa-search"></i>
-                        </span>
-                        <span class="icon is-medium is-right">
-                            <i class="fa fa-check"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
     <div class="column ">
-        <div class="card events-card">
+        <div class="card events-card has-background-white-ter">
             <header class="card-header">
                 <p class="card-header-title">
+                    <i class="fa fa-users" aria-hidden="true"></i>&nbsp;
                     Customers
                 </p>
                 <a href="#" class="card-header-icon" aria-label="more options">
@@ -176,11 +163,11 @@
                         </tr>
                         <tr>
                             <td>New Customers</td>
-                            <td class="level-right">{{ total_orders }}</td>
+                            <td class="level-right">{{ total_customers_time_24_hours_ago }}</td>
                         </tr>
                         <tr>
                             <td>Total Open baskets</td>
-                            <td class="level-right">{{ total_orders }}</td>
+                            <td class="level-right"></td>
                         </tr>
                         <tr>
 
@@ -192,4 +179,80 @@
         </div>
     </div>
 </div>
+
+<div class="columns">
+    <div class="column">
+        <!-- Catalogue and Stock -->
+        <div class="column ">
+            <div class="card events-card has-background-white-ter">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <i class="fa fa-list" aria-hidden="true"></i>&nbsp;
+                        Catalogue and Stock
+                    </p>
+                    <!-- <a href="#" class="card-header-icon" aria-label="more options">
+                    <span class="icon">
+                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </a> -->
+                </header>
+                <div class="card-table">
+                    <div class="content">
+                        <table class="table is-fullwidth is-bordered is-hoverable is-striped ">
+                            <tbody>
+                                <tr>
+                                    <td>Total Products</td>
+                                    <td class="level-right">{{ total_stock_items }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Stock Alerts</td>
+                                    <td class="level-right">${{ revenue_past_24_hours_orders }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Closed Stock Alerts</td>
+                                    <td class="level-right">${{average_revenue_24_hours}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <!-- Offers and Voucher -->
+        <div class="column ">
+            <div class="card events-card has-background-white-ter">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <i class="fa fa-gift" aria-hidden="true"></i>&nbsp;
+                        Offer and Voucher
+                    </p>
+                    <!-- <a href="#" class="card-header-icon" aria-label="more options">
+                        <span class="icon">
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </a> -->
+                </header>
+                <div class="card-table">
+                    <div class="content">
+                        <table class="table is-fullwidth is-bordered is-hoverable is-striped ">
+                            <tbody>
+                                <tr>
+                                    <td>Active Site Offers</td>
+                                    <td class="level-right">{{ total_past_24_hours_orders }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active Vouchers</td>
+                                    <td class="level-right">${{ revenue_past_24_hours_orders }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}

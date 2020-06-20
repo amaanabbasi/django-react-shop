@@ -1,3 +1,4 @@
+import datetime
 from django_countries import countries
 from django.db.models import Q
 from django.conf import settings
@@ -88,6 +89,8 @@ class AddToCartView(APIView):
             return Response({"message": "Invalid request"}, status=HTTP_400_BAD_REQUEST)
 
         item = get_object_or_404(Item, slug=slug)
+        if item.stock_quantity <= 0:
+            return Response({"message": "This item is out of stock"})
 
         minimum_variation_count = Variation.objects.filter(item=item).count()
         if len(variations) < minimum_variation_count:
@@ -106,7 +109,11 @@ class AddToCartView(APIView):
         if order_item_qs.exists():
             order_item = order_item_qs.first()
             order_item.quantity += 1
-            order_item.save()
+            if order_item.quantity <= order_item.item.stock_quantity:
+                order_item.save()
+            else:
+                return Response({"message": "This item is limited in stock."})
+
         else:
             order_item = OrderItem.objects.create(
                 item=item,
@@ -153,7 +160,7 @@ def subtract_item_quantity_from_stock(item):
     """
     try:
         item_in_stock = Item.objects.get(id=item.item.id)
-        item_in_stock.quantity = F('quantity') - item.quantity
+        item_in_stock.stock_quantity = F('stock_quantity') - item.quantity
         item_in_stock.save()
 
     except Exception as e:
@@ -221,14 +228,18 @@ class PaymentView(APIView):
             # assign the payment to the order
 
             order_items = order.items.all()
+
             order_items.update(ordered=True)
             for item in order_items:
-                item.save()
+                if item.quantity > item.item.stock_quantity:
+                    print("this happend")
+                    return Response({"message": "This product is now out of stock"}, status=HTTP_400_BAD_REQUEST)
 
             order.ordered = True
             order.payment = payment
             order.billing_address = billing_address
             order.shipping_address = shipping_address
+            order.ordered_date = datetime.datetime.now()
             # order.ref_code = create_ref_code()
 
             subtract_item_quantity_from_stock(item)

@@ -126,8 +126,8 @@ class ProductDetail extends React.Component {
                           item.label === "primary"
                             ? "blue"
                             : item.label === "secondary"
-                            ? "green"
-                            : "olive"
+                              ? "green"
+                              : "olive"
                         }
                       >
                         {item.label}
@@ -138,6 +138,7 @@ class ProductDetail extends React.Component {
                 description={item.description}
                 extra={
                   <React.Fragment>
+
                     <Button
                       fluid
                       color="yellow"
@@ -178,6 +179,7 @@ class ProductDetail extends React.Component {
                         </Form.Field>
                       );
                     })}
+
                     <Form.Button primary>Add</Form.Button>
                   </Form>
                 </React.Fragment>

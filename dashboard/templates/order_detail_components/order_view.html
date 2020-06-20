@@ -1,0 +1,20 @@
+<div class="card-table">
+    <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+        <tbody>
+            <thead>
+                <tr>
+                    <th>Order Total</th>
+                    <th>Date Of purchase</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+        <tbody>
+            <tr>
+                <td>${{order.get_total}}</td>
+                <td>{{order.ordered_date}}</td>
+                <td>{{order.get_status}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

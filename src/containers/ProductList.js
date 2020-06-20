@@ -9,7 +9,8 @@ import {
   Label,
   Loader,
   Message,
-  Segment
+  Segment,
+  ItemExtra
 } from "semantic-ui-react";
 import { productListURL, addToCartURL } from "../constants";
 import { fetchCart } from "../store/actions/cart";
@@ -85,6 +86,7 @@ class ProductList extends React.Component {
                     <span className="cinema">{item.category}</span>
                   </Item.Meta>
                   <Item.Description>{item.description}</Item.Description>
+                  <ItemExtra>{item.stock_quantity < 0 ? <ItemExtra>Item not in stock</ItemExtra> : null}</ItemExtra>
                   <Item.Extra>
                     {/* <Button
                       primary
@@ -102,8 +104,8 @@ class ProductList extends React.Component {
                           item.label === "primary"
                             ? "blue"
                             : item.label === "secondary"
-                            ? "green"
-                            : "olive"
+                              ? "green"
+                              : "olive"
                         }
                       >
                         {item.label}

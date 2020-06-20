@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+{% block content %}
+<form action="{% url 'dashboard:refund_list' %}" method="post">{% csrf_token %}
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                List of Refund requests
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="content">
+
+                <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+                    <tbody>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Order No</th>
+                                <th>refund id</th>
+                                <th>Refund Status</th>
+                                <th>Reason</th>
+                                <th>email</th>
+                                <th>Order Details</th>
+
+                            </tr>
+                        </thead>
+                        {% for refund in refund_list %}
+                        <tr>
+                            <td><input class="radio" type="radio" value="{{refund.id}}" name="refund_id" size="1" />
+                            </td>
+                            <td width="5%">#{{refund.order.id}}</td>
+                            <td width="5%">#{{refund.id}}</td>
+                            <td class="level-right">
+                                {% if refund.order.refund_granted %}
+                                <a class="button is-small is-success" href="#">Granted</a>
+                                {% elif refund.order.refund_refused %}
+                                <a class="button is-small is-info" href="#">Denied</a>
+                                {% else %}
+                                <a class="button is-small is-info" href="#">Requested</a>
+                                {% endif %}
+                            </td>
+                            <td>{{refund.reason}}</td>
+                            <td>{{refund.email}}</td>
+
+                            <td>
+                                <a href="{% url 'dashboard:order_detail' id=refund.order.id %}" target="_blank">
+                                    <div class=" is-small button">Click
+                                        Here</div>
+                                </a>
+
+                            </td>
+                        </tr>
+                        <input id="order_ref" name="order_ref_code" type="hidden" value="{{refund.order.ref_code}}">
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div><br /><br /><br />
+    <div class="card has-background-white-ter">
+        <header class="card-header">
+            <p class="card-header-title">
+                Change Refund Status
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="select is-rounded">
+                <select id="status" name="status">
+                    <option value="1">Grant Refund</option>
+                    <option value="-1">Deny Refund</option>
+                </select>
+            </div>
+            <input class="button  is-info is-rounded" type="submit" class="btn" value="Change Status" name="mybtn">
+        </div>
+    </div>
+</form>
+{% endblock content %}

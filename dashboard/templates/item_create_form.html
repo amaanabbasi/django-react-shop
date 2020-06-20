@@ -1,0 +1,79 @@
+{%  extends 'layout.html' %}{% load bulma_tags %}
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column">
+            <div class="card has-background-grey-lighte">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        Add a New Product
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <p>SKU - Stock Keeping Unit</p>
+                        <p>UPC - Universal code</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form enctype="multipart/form-data" method="post" action=".">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-content">
+                <div class="columns is-centered">
+                    <div class="column is-half">
+                        <div class="columns">
+                            <div class="column">
+                                {{form.title|bulma }}
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                {{form.sku|bulma}}
+                            </div>
+                            <div class="column">
+                                {{form.upc|bulma}}
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                {{form.price|bulma}}
+                            </div>
+                            <div class="column">
+                                {{form.discount_price|bulma}}
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">{{form.category|bulma}}</div>
+                            <div class="column">{{form.label|bulma}}</div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                {{form.slug|bulma}}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="column is-half">
+                        <div class="columns">
+                            <div class="column">{{form.stock_quantity|bulma}}</div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">{{form.description|bulma}}</div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">{{form.image}}</div>
+                        </div>
+                        <input class="button is-danger is-fullwidth" type="submit" value="Submit">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+{% endblock content %}

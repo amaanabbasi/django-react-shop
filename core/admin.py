@@ -23,6 +23,7 @@ class OrderAdmin(admin.ModelAdmin):
                     'received',
                     'refund_requested',
                     'refund_granted',
+                    'refund_refused',
                     'shipping_address',
                     'billing_address',
                     'payment',

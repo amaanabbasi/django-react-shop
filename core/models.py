@@ -4,7 +4,9 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
-
+from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
+import random
+import string
 
 CATEGORY_CHOICES = (
     ('G', 'Groceries'),
@@ -33,16 +35,47 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+def upload_location(instance, filename):
+
+    #filebase, extension = filename.split(".")
+    # return "%s/%s.%s" %(instance.id, instance.id, extension)
+    # PostModel = instance.__class__
+    # new_id = PostModel.objects.order_by("id").last().id + 1
+    """
+    instance.__class__ gets the model Post. We must use this method because the model is defined below.
+    Then create a queryset ordered by the "id"s of each object,
+    Then we get the last object in the queryset with `.last()`
+    Which will give us the most recently created Model instance
+    We add 1 to it, so we get what should be the same id as the the post we are creating.
+    """
+
+    # filebase, _ = filename.split(".")
+    res = ''.join(random.choices(string.ascii_uppercase +
+                                 string.digits, k=24))
+    return "%s.jpg" % (res)
+
+
+class ImageUploads(models.Model):
+    image = models.ImageField(
+        upload_to=upload_location, blank=False, null=False)
+
+
 class Item(models.Model):
     title = models.CharField(max_length=100)
+    sku = models.CharField(max_length=8, validators=[
+                           MinLengthValidator(8)], unique=True)
+    upc = models.CharField(max_length=12, validators=[
+                           MinLengthValidator(12)], unique=True, blank=True, null=True)
+    date_updated = models.DateTimeField(
+        auto_now=True, blank=True, null=True)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     slug = models.SlugField()
     description = models.TextField()
-    image = models.ImageField()
-    quantity = models.IntegerField(default=0)
+    image = models.ImageField(upload_to=upload_location, blank=True, null=True)
+    stock_quantity = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -51,6 +84,11 @@ class Item(models.Model):
         return reverse("core:product", kwargs={
             'slug': self.slug
         })
+
+    # def get_absolute_url2(self):
+    #     return reverse("dashboard:product_detail", kwargs={
+    #         'slug': self.slug
+    #     })
 
     def get_add_to_cart_url(self):
         return reverse("core:add-to-cart", kwargs={
@@ -61,6 +99,14 @@ class Item(models.Model):
         return reverse("core:remove-from-cart", kwargs={
             'slug': self.slug
         })
+
+    # def save(self, *args, **kwargs):
+    #     # call the compress function
+    #     # new_image = compress(self.image)
+    #     # set self.image to new_image
+    #     self.image = image
+    #     # save
+    #     super().save(*args, **kwargs)
 
 
 class Variation(models.Model):
@@ -138,6 +184,7 @@ class Order(models.Model):
     received = models.BooleanField(default=False)
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
+    refund_refused = models.BooleanField(default=False)
 
     '''
     1. Item added to cart
@@ -148,6 +195,13 @@ class Order(models.Model):
     4. Being delivered
     5. Received
     6. Refunds
+        6.1 
+            - refund_request When a user requests for a refund on an order.
+            - refund_granted It is set to true by the admin after verfication of the request.
+            - refuned_refused It is set to true by the admin if the refund cannot be issued.  
+              and  if true that means now no more refund request can be initiated 
+               on this order.
+ 
     '''
 
     def __str__(self):
@@ -166,11 +220,21 @@ class Order(models.Model):
         if status == 0:
             return "Not Ordered"
         if status == 1:
-            return "Ordered + Processing"
+            return "Ordered"
         elif status == 2:
             return "Sent for delivery"
         elif status == 3:
             return "Delivered"
+        # LAter add refund
+
+    def get_absolute_url(self):
+        return reverse("dashboard:product_detail", kwargs={
+            'slug': self.slug
+        })
+
+
+class Shipping(models.Model):
+    pass
 
 
 class Address(models.Model):
@@ -212,7 +276,6 @@ class Coupon(models.Model):
 class Refund(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     reason = models.TextField()
-    accepted = models.BooleanField(default=False)
     email = models.EmailField()
 
     def __str__(self):

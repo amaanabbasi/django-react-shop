@@ -1,4 +1,4 @@
-<!DOCTYPE html>{% load static %}
+<!DOCTYPE html> {% load static %}
 <html>
 
 <head>
@@ -9,17 +9,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
     <!-- Bulma Version 0.8.2-->
-    <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.2/css/bulma.min.css" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/admin.css'%}">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.2/css/bulma.min.css" /> -->
+    <link rel="stylesheet" href="{% static 'css/bulma.min.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/admin.css'%}"> -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    </style>
 </head>
 
 <body>
 
     <!-- START NAV -->
-    <nav class="navbar is-white">
+    <nav class="navbar is-dark">
         <div class="navbar-brand">
-            <a class="navbar-item brand-text" href="../index.html">
-                Bulma Admin
+            <a class="navbar-item brand-text" href="{% url 'dashboard:dashboard'%}">
+                My Inventory
             </a>
             <div class="navbar-burger burger" data-target="navMenu">
                 <span></span>
@@ -29,39 +33,84 @@
         </div>
         <div id="navMenu" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
-                <a class="navbar-item">Catalogue</a>
-                <a class="navbar-item">Content</a>
-                <a class="navbar-item">Reviews</a>
-                <a class="navbar-item">Communications</a>
-                <a class="navbar-item">Offers</a>
+                <!-- <a class="navbar-item" href="{% url 'dashboard:dashboard' %}">Dashboard</a> -->
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <i class="fa fa-list" aria-hidden="true"></i>&nbsp;Catalogue
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="{% url 'dashboard:product_list' %}">
+                            Products
+                        </a>
+                        <a class="navbar-item">
+                            Ecom Api
+                        </a>
+                    </div>
+                </div>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp; Fullfilment
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="{% url 'dashboard:order_list' %}">
+                            Order
+                        </a>
+                        <a class=" navbar-item">
+                            Statistics
+                        </a>
+                        <a class="navbar-item">
+                            Partners
+                        </a>
+                    </div>
+                </div>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <i class="fa fa-users" aria-hidden="true"></i>&nbsp; Customers
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="{% url 'dashboard:order_list' %}">
+                            Customers list
+                        </a>
+                        <a class=" navbar-item">
+                            Stock Alerts
+                        </a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="{% url 'dashboard:refund_list' %}">Refund</a>
                 <a class="navbar-item">Vouchers</a>
                 <a class="navbar-item">Orders</a>
                 <a class="navbar-item">Reports</a>
             </div>
 
+
+
         </div>
     </nav>
+    <br /><br />
     <!-- END NAV -->
     <div class="container">
-        <div class="columns" style="">
-            <div class="column is-fullwidth">
-                <!-- <nav class="breadcrumb" aria-label="breadcrumbs">
-                    <ul>
-                        <li><a href="../">Bulma</a></li>
-                        <li><a href="../">Templates</a></li>
-                        <li><a href="../">Examples</a></li>
-                        <li class="is-active"><a href="#" aria-current="page">Admin</a></li>
-                    </ul>
-                </nav> -->
-                {% block content %}
-                {% endblock content %}
+        {% if messages %}
+        <article class="message">
+            {% for message in messages %}
+            <div class="message-body  has-background-{{message.tags}}">
+                {{ message }}
             </div>
-        </div>
+            {% endfor %}
+        </article>
+        {% endif %}
+        {% block content %}
+
+        {% endblock content %}
 
     </div>
 
-    <script async type="text/javascript" src="../js/bulma.js"></script>
+    <script async type="text/javascript" src="{% static 'js/bulma.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/style.js' %}"></script>
+
 </body>
 
 </html>

@@ -1,0 +1,23 @@
+<div class="card-table">
+    <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+        <tbody>
+            <thead>
+                <tr>
+
+                    <th>Payment Id</th>
+                    <th>Date of Payment</th>
+                    <th>Amount Paid</th>
+                    <th>Stripe Charge id</th>
+                </tr>
+            </thead>
+        <tbody>
+            <tr>
+                <td>#{{order.payment.id}}</td>
+                <td>{{order.payment.timestamp}}</td>
+                <td>${{order.payment.amount}}</td>
+                <td>{{order.payment.stripe_charge_id}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

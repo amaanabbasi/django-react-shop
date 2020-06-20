@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="columns is-centered has-text-centered">
+    <div class="column is-half">
+        <div class="card has-background-white-ter">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Search Orders
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Find an Order">
+                        </div>
+                        <div class="control">
+                            <a class="button is-info">
+                                Search
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            All Orders
+        </p>
+    </header>
+    <div class="card-content">
+        <div class="content">
+
+            <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+                <tbody>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>id</th>
+                            <th>title</th>
+                            <th>Image</th>
+                            <th>sku</th>
+                            <th>price($)</th>
+                            <th>Discount price($)</th>
+                            <th>Stock Quantity</th>
+                            <th>Date Updated</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    {% for product in object_list %}
+                    <tr>
+                        <td><input class="checkbox" type="checkbox" value="{{order.id}}" name="order_id" size="1" />
+                        </td>
+                        <td width="5%">{{product.id}}</td>
+                        <td>{{product.title}}</td>
+                        <td width="9%"><img src="{{product.image.url}}"></td>
+                        <td>{{product.sku}}</td>
+                        <td>${{product.price}}</td>
+                        <td>${{product.discount_price}} </td>
+                        <td>{{product.stock_quantity}} </td>
+                        <td>{{product.date_updated}} </td>
+                        <td>
+                            <div class="dropdown is-hoverable">
+                                <div class="dropdown-trigger">
+                                    <button class="button is-info" aria-haspopup="true" aria-controls="dropdown-menu4">
+                                        <span>Action</span>
+                                        <span class="icon is-small">
+                                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                                    <div class="dropdown-content">
+                                        <div class="dropdown-item">
+                                            <a href="{% url 'dashboard:product_update' id=product.id %}"
+                                                class="dropdown-item">
+                                                Edit
+                                            </a>
+                                            <a href="{% url 'core:product' slug=product.slug %}" class="dropdown-item">
+                                                View on site
+                                            </a><a href="#" class="dropdown-item">
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

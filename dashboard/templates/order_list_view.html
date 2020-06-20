@@ -2,7 +2,7 @@
 {% block content %}
 <div class="columns is-centered has-text-centered">
     <div class="column is-half">
-        <div class="card">
+        <div class="card has-background-white-ter">
             <header class="card-header">
                 <p class="card-header-title">
                     Search Orders
@@ -12,7 +12,7 @@
                 <div class="content">
                     <div class="field has-addons">
                         <div class="control">
-                            <input class="input" type="text" placeholder="Find a repository">
+                            <input class="input" type="text" placeholder="Find an Order">
                         </div>
                         <div class="control">
                             <a class="button is-info">
@@ -25,43 +25,79 @@
         </div>
     </div>
 </div>
-<div class="card">
-    <header class="card-header">
-        <p class="card-header-title">
-            All Orders
-        </p>
-    </header>
-    <div class="card-content">
-        <div class="content">
-            <table class="table is-fullwidth is-bordered is-hoverable is-striped">
-                <tbody>
-                    <thead>
+<form action="{% url 'dashboard:order_list' %}" method="post">{% csrf_token %}
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                All Orders / Change Order Status
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="content">
+
+                <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+                    <tbody>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Order no.</th>
+                                <th>Total amount $</th>
+                                <th>Status</th>
+                                <th>Shipping Address</th>
+                                <th>Date Of Purchase</th>
+                                <th>Details</th>
+
+                            </tr>
+                        </thead>
+                        {% for order in orders %}
                         <tr>
-                            <th>order id</th>
-                            <th>Order Total</th>
-                            <th>Status</th>
-                            <th>Shipping Address</th>
-                            <th>Date Of Purchase</th>
+                            <td><input class="checkbox" type="checkbox" value="{{order.id}}" name="order_id" size="1" />
+                            </td>
+                            <td width="5%">#{{order.id}}</td>
+                            <td>${{order.get_total}}</td>
 
+                            <td class="level-right">
+                                {% if order.get_status == "Ordered"%}
+                                <a class="button is-small is-warning" href="#">{{order.get_status}}</a>
+                                {% elif order.get_status == "Delivered"%}
+                                <a class="button is-small is-success" href="#">{{order.get_status}}</a>
+                                {% elif order.get_status == "Sent for delivery"%}
+                                <a class="button is-small is-info" href="#">{{order.get_status}}</a>
+
+                                {% endif %}
+                            </td>
+                            <td> {{order.shipping_address.apartment_address}},
+                                {{order.shipping_address.street_address }}
+                                {{order.shipping_address.zip}}</td>
+                            <td> {{order.ordered_date}} </td>
+                            <td><a href="{% url 'dashboard:order_detail' id=order.id %}">
+                                    <div class="button is-small is-info">View</div>
+                                </a></td>
                         </tr>
-                    </thead>
-                    {% for order in orders %}
-                    <tr>
-                        <td width="5%">#{{order.id}}</td>
-                        <td>${{order.get_total}}</td>
-                        <td class="level-right"><a class="button is-small is-black" href="#">{{order.get_status}}</a>
-                        </td>
-                        <td> {{order.shipping_address.apartment_address}}, {{order.shipping_address.street_address }}
-                            {{order.shipping_address.zip}}</td>
-                        <td> {{order.ordered_date}} </td>
-                    </tr>
-                    {% endfor %}
+                        {% endfor %}
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div><br /><br /><br />
+    <div class="card has-background-white-ter">
+        <header class="card-header">
+            <p class="card-header-title">
+                Change Order Status
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="select is-rounded">
+                <select id="status" name="status">
+                    <option value="2">Sent for delivery</option>
+                    <option value="3">Delivered</option>
+                </select>
+            </div>
+            <input class="button  is-info is-rounded" type="submit" class="btn" value="Change Status" name="mybtn">
         </div>
     </div>
-</div>
-
+</form>
 
 {% endblock content %}
