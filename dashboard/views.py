@@ -229,6 +229,17 @@ class OrderDetailView(PermissionRequiredMixin, View):
 
 
 class RefundListView(PermissionRequiredMixin, View):
+    """
+    Refund requests sent by the customers appear here. 
+    The admin can grant or deny a refund request as per his/her will.
+
+    When a grant request is made on a refund an api request is sent to stripe
+    with stripe_charge_id, stripe_charge_id is the same id that was created when the payment
+    for this order was done by the customer. Stripe will automatically stop repeated refund request
+    on the same order. This request is irreversible.
+
+    When a Deny request is made the order is denied refund. 
+    """
     permission_required = 'is_staff'
 
     def get(self, request):
@@ -244,7 +255,7 @@ class RefundListView(PermissionRequiredMixin, View):
         refund_id = int(request.POST.get("refund_id"))
         order_ref_code = request.POST.get("order_ref_code")
         update_status_for_refund = int(request.POST['status'])
-        refund = get_object_or_404(Refund, id=refund_id)
+        # refund = get_object_or_404(Refund, id=refund_id)
 
         order = get_object_or_404(Order, ref_code=order_ref_code)
         stripe_charge_id = order.payment.stripe_charge_id
@@ -255,7 +266,7 @@ class RefundListView(PermissionRequiredMixin, View):
                     charge=stripe_charge_id,
                 )
                 order.refund_granted = True
-                refund.save()
+                # refund.save()
                 order.save()
             except Exception as err:
                 messages.warning(request, f"Message: {err.code}")

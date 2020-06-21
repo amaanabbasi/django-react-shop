@@ -9,8 +9,14 @@ import random
 import string
 
 CATEGORY_CHOICES = (
-    ('G', 'Groceries'),
-    ('D', 'Dairy')
+    ('DR', 'Drink'),
+    ('DO', 'Deals & Offers'),
+    ('DI', 'Dairy Items'),
+    ('FV', 'Fruits & Vegetables'),
+    ('GR', 'Groceries'),
+    ('HS', 'Household Supplies'),
+    ('BP', 'Beauty & Personal Care'),
+    ('OT', 'Others'),
 )
 
 LABEL_CHOICES = (
@@ -52,7 +58,7 @@ def upload_location(instance, filename):
     # filebase, _ = filename.split(".")
     res = ''.join(random.choices(string.ascii_uppercase +
                                  string.digits, k=24))
-    return "%s.jpg" % (res)
+    return "products/%s.jpg" % (res)
 
 
 class ImageUploads(models.Model):
@@ -84,11 +90,6 @@ class Item(models.Model):
         return reverse("core:product", kwargs={
             'slug': self.slug
         })
-
-    # def get_absolute_url2(self):
-    #     return reverse("dashboard:product_detail", kwargs={
-    #         'slug': self.slug
-    #     })
 
     def get_add_to_cart_url(self):
         return reverse("core:add-to-cart", kwargs={
