@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-three-quarters">
+                {% for order in orders %}
+
+                {% if order.get_status != "Not Ordered" %}
+                <div class="box">
+                    <div class="box-header has-background-white-ter" style='padding:1em'>
+                        <div class="columns">
+                            <div class="column">
+                                <p class="is-size-7">
+                                    ORDERED DATE
+                                </p>
+                                <p class="is-size-6"> {{order.ordered_date.date}}</p>
+
+                            </div>
+                            <div class="column">
+                                <p class="is-size-7">
+                                    TOTAL AMOUNT PAID
+                                </p>
+                                <p class="is-size-6"> {{order.get_total}}</p>
+                            </div>
+                            <div class="column">
+                                <p class="is-size-7">
+                                    SHIPPING ADDRESS
+                                </p>
+                                <p class="is-size-6">
+                                <div class="dropdown is-hoverable">
+                                    <div class="dropdown-trigger">
+                                        <button class="button is-small" aria-haspopup="true"
+                                            aria-controls="dropdown-menu">
+                                            <span>{{order.shipping_address}}</span>
+                                            <span class="icon is-small">
+                                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                        <div class="dropdown-content ">
+                                            <a href="#" class="dropdown-item has-text-black">
+                                                {{order.shipping_address.get_full_address}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="column">
+                                <p class="is-size-7">
+                                    ORDER NO
+                                </p>
+                                <p class="is-size-7">#{{order.id}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-content" style="margin-top:1em">
+                        <div class="columns">
+                            <div class="column">
+                                <h2 class="title is-4">
+                                    {% if order.get_status == "Ordered"%}
+                                    <a class="button is-small is-warning" href="#">{{order.get_status}}</a>
+                                    {% elif order.get_status == "Delivered"%}
+                                    <a class="button is-small is-success" href="#">{{order.get_status}}</a>
+                                    {% elif order.get_status == "Sent for delivery"%}
+                                    <a class="button is-small is-info" href="#">{{order.get_status}}</a>
+                                    {% else %}
+                                    <a class="button is-small is-grey" href="#">{{order.get_status}}</a>
+                                    {% endif %}
+                                </h2>
+                            </div>
+                            <div class="column is-one-quarter">
+                                <a href="{% url 'core:request-refund' %}"
+                                    class="button is-small is-fullwidth is-warning">Return</a>
+                            </div>
+                        </div>
+                        <div class="columns is-gapless">
+                            <div class="column is-one-fifth">
+                                {% for item in order.items.all %}
+                                <img src="{{item.item.image.url}}" style="max-width:80%" alt="">
+                                </li>
+                                {% endfor %}
+
+                            </div>
+                            <div class="column">
+                                <div class="tile">
+                                    <ul>
+                                        {% for item in order.items.all %}
+                                        <li class="is-size-6">
+                                            <p><a href="{{item.item.get_absolute_url }}"
+                                                    class="is-size-6">{{item.item.title}}
+                                                </a></p>
+                                            <p class="is-size-6">${{item.item.price}}<b
+                                                    class="has-text-grey">&nbsp;x{{item.quantity}}</b></p>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}

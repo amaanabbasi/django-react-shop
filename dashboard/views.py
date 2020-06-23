@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views import View
 from django.views.generic import ListView, DetailView
-from core.models import Order, Item, Payment, ImageUploads, Refund
+from core.models import Order, Item, Payment, ImageUploads, Refund, ItemPrice
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.admin.views.decorators import staff_member_required
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class ProductListView(PermissionRequiredMixin, ListView):
     permission_required = 'is_staff'
     model = Item
-    paginate_by = 10
+    # paginate_by = 10
     template_name = "product_list.html"
 
 
@@ -34,6 +34,8 @@ def product_create_view(request):
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            # import pdb
+            # pdb.set_trace()
             messages.add_message(request, messages.INFO,
                                  'Product Added Successfully')
             return HttpResponseRedirect(reverse('core:home'))

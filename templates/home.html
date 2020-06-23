@@ -1,142 +1,163 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <main>
-    <div class="container">
 
-      <!--Navbar-->
-      <nav class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5">
 
-        <!-- Navbar brand -->
-        <span class="navbar-brand">Categories:</span>
+<!--Navbar-->
 
-        <!-- Collapse button -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
-          aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+<!--/.Navbar-->
+<!-- Product List -->
 
-        <!-- Collapsible content -->
-        <div class="collapse navbar-collapse" id="basicExampleNav">
-
-          <!-- Links -->
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">All
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Shirts</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Sport wears</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Outwears</a>
-            </li>
-
-          </ul>
-          <!-- Links -->
-
-          <form class="form-inline">
-            <div class="md-form my-0">
-              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            </div>
-          </form>
-        </div>
-        <!-- Collapsible content -->
-
-      </nav>
-      <!--/.Navbar-->
-
-      <!--Section: Products v.3-->
-      <section class="text-center mb-4">
-
-        <div class="row wow fadeIn">
-
+<section style="margin-bottom:1em;">
+  <div class="container">
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">
+          Essential Items
+      </header>
+      <div class='carousel is-6 carousel-animated carousel-animate-slide'>
+        <div class='carousel-container'>
           {% for item in object_list %}
-          <div class="col-lg-3 col-md-6 mb-4">
-
-            <div class="card">
-
-              <div class="view overlay">
-                {% comment %} <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12.jpg" class="card-img-top" {% endcomment %}
-                <img src="{{ item.image.url }}" class="card-img-top">
-                <a href="{{ item.get_absolute_url }}">
-                  <div class="mask rgba-white-slight"></div>
-                </a>
-              </div>
-
-              <div class="card-body text-center">
-                <a href="" class="grey-text">
-                  <h5>{{ item.get_category_display }}</h5>
-                </a>
-                <h5>
+          <div class='carousel-item is-active'>
+            <div class="tile is-ancestor">
+              <div class="tile is-parent">
+                <article class="tile is-child">
+                  <figure class="image is-4by3">
+                    <img src="{{item.image.url}}" alt="Placeholder image" style="max-height:120x;">
+                  </figure>
+                  <p class="is-size-7 has-text-weight-bold">{{item.title}}</p>
                   <strong>
-                    <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title }}
-                      <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span>
+                    {% if item.discount_price %}
+                    <p class="has-text-danger is-size-7">${{ item.discount_price }}&nbsp;&nbsp;<del
+                        class="has-text-black">${{item.price}}</del></p>
+                    {% else %}
+                    <p class="is-size-7 has-text-black">${{ item.price }}</p>
+                    {% endif %}
+                  </strong>
+                  <p class="is-size-7 has-text-success">Fresh</p>
+                  </strong></p>
+                  <p>{% if item.stock_quantity %}
+                    <a href="{{ item.get_add_to_cart_url }}" class="button is-small is-warning">
+                      Add to cart
                     </a>
-                  </strong>
-                </h5>
-
-                <h4 class="font-weight-bold blue-text">
-                  <strong>$
-                  {% if item.discount_price %}
-                  {{ item.discount_price }}
-                  {% else %}
-                  {{ item.price }}
-                  {% endif %}
-                  </strong>
-                </h4>
-
+                    {% else %}
+                    <a class="button is-small has-background-white-ter">
+                      Out of stock
+                    </a>
+                    {% endif %}
+                  </p>
+                </article>
               </div>
-
             </div>
-
           </div>
           {% endfor %}
         </div>
-
-      </section>
-      <!--Section: Products v.3-->
-
-      <!--Pagination-->
-
-      {% if is_paginated %}
-      <nav class="d-flex justify-content-center wow fadeIn">
-        <ul class="pagination pg-blue">
-
-          {% if page_obj.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">Previous</span>
-            </a>
-          </li>
-          {% endif %}
-
-          <li class="page-item active">
-            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-
-          {% if page_obj.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-              <span class="sr-only">Next</span>
-            </a>
-          </li>
-          {% endif %}
-        </ul>
-      </nav>
-      {% endif %}
-
+        <div class="carousel-navigation is-centered">
+          <div class="carousel-nav-left">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </div>
+          <div class="carousel-nav-right">
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
     </div>
-  </main>
+  </div>
+</section>
+<!--Dairy Products -->
+<section style="margin-bottom:1em;">
+  <div class="container">
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">
+          Dairy, Cheese & Eggs
+      </header>
+      <div class='carousel is-6 carousel-animated carousel-animate-slide'>
+        <div class='carousel-container'>
+          {% for item in object_list %}
+          <div class='carousel-item is-active'>
+            <div class="tile is-ancestor">
+              <div class="tile is-parent">
+                <article class="tile is-child">
+                  <figure class="image is-4by3">
+                    <img src="{{item.image.url}}" alt="Placeholder image" style="max-height:120x;">
+                  </figure>
+                  <p class="is-size-7 has-text-weight-bold">{{item.title}}</p>
+                  <strong>
+                    {% if item.discount_price %}
+                    <p class="has-text-danger is-size-7">${{ item.discount_price }}&nbsp;&nbsp;<del
+                        class="has-text-black">${{item.price}}</del></p>
+                    {% else %}
+                    <p class="is-size-7 has-text-black">${{ item.price }}</p>
+                    {% endif %}
+                  </strong>
+                  <p class="is-size-7 has-text-success">Fresh</p>
+                  </strong></p>
+                  <p>{% if item.stock_quantity %}
+                    <a href="{{ item.get_add_to_cart_url }}" class="button is-small is-warning">
+                      Add to cart
+                    </a>
+                    {% else %}
+                    <a class="button is-small has-background-white-ter">
+                      Out of stock
+                    </a>
+                    {% endif %}
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="carousel-navigation is-centered">
+          <div class="carousel-nav-left">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </div>
+          <div class="carousel-nav-right">
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-{% endblock content %}
+<!--Section: Products v.3-->
+<section class="hero-body">
+
+</section>
+<!--Pagination-->
 
 
+
+
+{% endblock content %}{% if is_paginated %}
+<nav class="d-flex justify-content-center wow fadeIn">
+  <ul class="pagination pg-blue">
+
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    {% endif %}
+
+    <li class="page-item active">
+      <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}
+        <span class="sr-only">(current)</span>
+      </a>
+    </li>
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

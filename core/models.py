@@ -144,6 +144,9 @@ class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     item_variations = models.ManyToManyField(ItemVariation)
     quantity = models.IntegerField(default=1)
+    # Should not be blank, itemPrice at time of purchase
+    purchase = models.FloatField(blank=True, null=True)
+    # Since it can change at later point of time it should be saved
 
     def __str__(self):
         return f"{self.quantity} of {self.item.title}"
@@ -163,10 +166,27 @@ class OrderItem(models.Model):
         return self.get_total_item_price()
 
 
+# class DeliveredOrder(models.Model):
+
+
+"""
+Edit: Another thing to consider is having a built in way to distinguish orders, customers, 
+etc. e.g. customers always start with 10, orders always start 
+with 20, vendors always start with 30, etc.
+"""
+
+
+class ItemPrice(models.Model):
+    item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    price = models.FloatField(blank=True, null=True)  # change blank and null
+    date_changed = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-    ref_code = models.CharField(max_length=20, blank=True, null=True)
+    ref_code = models.CharField(
+        max_length=20, blank=True, null=True, unique=True)
     items = models.ManyToManyField(OrderItem)
     start_date = models.DateTimeField(auto_now_add=True)
     # Check this
@@ -250,6 +270,9 @@ class Address(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def get_full_address(self):
+        return str(self.apartment_address) + ", " + str(self.street_address) + ", " + str(self.zip)
 
     class Meta:
         verbose_name_plural = 'Addresses'

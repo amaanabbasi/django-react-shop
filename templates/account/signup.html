@@ -1,28 +1,59 @@
 {% extends "account/base.html" %}
 {% load i18n %}
-{% load crispy_forms_tags %}
+{% load bulma_tags %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-  <main>
-    <div class="container">
-      <section class="mb-4">
-        <div class="row wow fadeIn">
-          <div class='col-6 offset-3'>
-            <h1>{% trans "Sign Up" %}</h1>
-            <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
-            <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+<section>
+  <div class="container" style="margin-top:1.5em;">
+    <div class="columns is-centered">
+      <div class="column is-4">
+        <div class="card">
+          <div class="card-content">
+            <h1 class="title">{% trans "Sign Up" %}</h1>
+            <form class="login" method="POST" action="{% url 'account_login' %}">
               {% csrf_token %}
-              {{ form|crispy }}
+              {{ form|bulma }}
+              <button class="button is-warning is-fullwidth" type="submit">{% trans "Sign In" %}</button>
               {% if redirect_field_value %}
               <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
               {% endif %}
-              <button class='btn btn-primary' type="submit">{% trans "Sign Up" %} &raquo;</button>
+              <br />
+              <p class="is-size-7">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</p>
+              <a class="is-size-7" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
             </form>
           </div>
         </div>
-      </section>
+      </div>
     </div>
-  </main>
+  </div>
+</section>
 {% endblock %}
+
+
+
+
+
+
+<main>
+  <div class="container">
+    <section class="mb-4">
+      <div class="row wow fadeIn">
+        <div class='col-6 offset-3'>
+          <h1>{% trans "Sign Up" %}</h1>
+          <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign
+              in</a>.{% endblocktrans %}</p>
+          <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            {{ form|bulma }}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <button class='btn btn-primary' type="submit">{% trans "Sign Up" %} &raquo;</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

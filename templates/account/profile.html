@@ -1,0 +1,177 @@
+{% extends "account/base.html" %}
+{% load i18n %}{% load staticfiles %}
+{% load bulma_tags %}
+
+{% block head_title %}{% trans "Your Account" %}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:80%;">
+    <div class="columns is-centered">
+        <div class="column is-one-thirds">
+            <h1 class="is-size-3 is-black">Your Account {{user.username}}</h1>
+        </div>
+    </div>
+    <div class="columns is-centered">
+        <div class="column is-one-thirds">
+            <a href="{% url 'core:order-history'%}">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-left">
+                                <figure class="image is-48x48">
+                                    <img src="{% static 'img/order_box.png' %}" alt="Placeholder image">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <p class="title is-4">Your Orders</p>
+                                <p class="subtitle is-6">Return or Buy Again</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="{% static 'img/security_lock.png'%}" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">Your Account</p>
+                            <p class="subtitle is-6">Update/Change name, email</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="{% static 'img/payment_card.png'%}" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">Payments</p>
+                            <p class="subtitle is-6">You payments card and others</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="columns is-centered">
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="{% static 'img/order_box.png' %}" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">Your Orders</p>
+                            <p class="subtitle is-6">Return or Buy Again</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="{% static 'img/security_lock.png'%}" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">Your Account</p>
+                            <p class="subtitle is-6">Update/Change name, email</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="{% static 'img/payment_card.png'%}" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">Payments</p>
+                            <p class="subtitle is-6">You payments card and others</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="columns is-centered">
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">John Smith</p>
+                            <p class="subtitle is-6">@johnsmith</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">John Smith</p>
+                            <p class="subtitle is-6">@johnsmith</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-one-thirds">
+            <div class="card has-background-white">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">John Smith</p>
+                            <p class="subtitle is-6">@johnsmith</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -2,6 +2,44 @@
 {% block content %}
 <div class="container">
     <h1 class="title is-3">Order Number: #{{order.id}}</h1>
+    <!-- Order information -->
+    <div class="card events-card has-background-white-ter">
+        <header class="card-header">
+            <p class="card-header-title">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;
+                Order Details
+            </p>
+            <a href="#" class="card-header-icon" aria-label="more options">
+                <span class="icon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </span>
+            </a>
+        </header>
+
+        <div id="tabs-with-content">
+            <div class="tabs is-centered">
+                <ul>
+                    <li><a>Order</a></li>
+                    <li><a>Shipping</a></li>
+                    <li><a>Payment</a></li>
+                    <li><a>Discount</a></li>
+                </ul>
+            </div>
+            <div>
+                <section class="tab-content">
+                    {% include 'order_detail_components/order_view.html' %}
+                </section>
+                <section class="tab-content">{% include 'order_detail_components/order_shipping.html' %}</section>
+                <section class="tab-content">{% include 'order_detail_components/order_payment.html' %}</section>
+                <section class="tab-content">Documents content</section>
+            </div>
+        </div>
+
+
+
+
+    </div>
+    <br />
     <!-- Customer information -->
     <div class="card events-card has-background-white-ter">
         <header class="card-header">
@@ -53,7 +91,6 @@
                 <tbody>
                     <thead>
                         <tr>
-
                             <th>Order Total</th>
                             <th>Date Of purchase</th>
                             <th>Status</th>
@@ -65,53 +102,21 @@
                         <td>{{order.ordered_date}}</td>
                         <td>{{order.get_status}}</td>
                     </tr>
+                    </thead>
+                <tbody>
                 </tbody>
             </table>
 
         </div>
     </div>
     <br />
-    <div class="card events-card has-background-white-ter">
-        <header class="card-header">
-            <p class="card-header-title">
-                <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;
-                Order Details
-            </p>
-            <a href="#" class="card-header-icon" aria-label="more options">
-                <span class="icon">
-                    <i class="fa fa-angle-down" aria-hidden="true"></i>
-                </span>
-            </a>
-        </header>
 
-        <div id="tabs-with-content">
-            <div class="tabs is-centered">
-                <ul>
-                    <li><a>Order</a></li>
-                    <li><a>Shipping</a></li>
-                    <li><a>Payment</a></li>
-                    <li><a>Discount</a></li>
-                </ul>
-            </div>
-            <div>
-                <section class="tab-content">
-                    {% include 'order_detail_components/order_view.html' %}
-                </section>
-                <section class="tab-content">In Progress</section>
-                <section class="tab-content">{% include 'order_detail_components/order_payment.html' %}</section>
-                <section class="tab-content">Documents content</section>
-            </div>
-        </div>
-
-
-
-
-    </div>
 </div>
 
 
 
 {% endblock content %}
+
 
 <div class="card-content">
     <div class="content">

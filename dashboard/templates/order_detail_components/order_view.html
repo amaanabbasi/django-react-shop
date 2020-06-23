@@ -3,17 +3,24 @@
         <tbody>
             <thead>
                 <tr>
-                    <th>Order Total</th>
-                    <th>Date Of purchase</th>
-                    <th>Status</th>
+                    <th>Item sku</th>
+                    <th>Item title</th>
+                    <th>Item quantity</th>
+                    <th>Item final Price</th>
+                    <th></th>
                 </tr>
             </thead>
         <tbody>
+
+            {% for item in order.items.all %}
             <tr>
-                <td>${{order.get_total}}</td>
-                <td>{{order.ordered_date}}</td>
-                <td>{{order.get_status}}</td>
+                <td>{{item.item.sku}}</td>
+                <td>{{item.item.title}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.purchase}}</td>
+                <td>{{item.discount}}</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 

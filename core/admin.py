@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import (
     Item, OrderItem, Order, Payment, Coupon, Refund,
-    Address, UserProfile, Variation, ItemVariation
+    Address, UserProfile, Variation, ItemVariation, ItemPrice
 )
 
 
@@ -86,6 +86,7 @@ class VariationAdmin(admin.ModelAdmin):
 admin.site.register(ItemVariation, ItemVariationAdmin)
 admin.site.register(Variation, VariationAdmin)
 admin.site.register(Item)
+admin.site.register(ItemPrice)
 admin.site.register(OrderItem)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Payment)

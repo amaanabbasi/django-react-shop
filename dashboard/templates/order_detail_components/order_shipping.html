@@ -1,0 +1,19 @@
+<div class="card-table">
+    <table class="table is-fullwidth is-bordered is-hoverable is-striped">
+        <tbody>
+            <thead>
+                <tr>
+
+                    <th>Customer Name</th>
+                    <th>Shipping Address</th>
+                </tr>
+            </thead>
+        <tbody>
+            <tr>
+                <td>{{order.user.username | title}}</td>
+                <td>{{order.shipping_address.get_full_address}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

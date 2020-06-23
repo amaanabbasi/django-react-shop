@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -35,6 +36,38 @@ def is_valid_form(values):
         if field == '':
             valid = False
     return valid
+
+
+class Profile(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        user = get_object_or_404(User, id=self.request.user.id)
+
+        context = {
+            "user": user,
+        }
+        return render(self.request, "account/profile.html", context)
+
+
+class OrderHistory(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+
+        user = get_object_or_404(User, id=self.request.user.id)
+        orders = user.order_set.all()[::-1]
+        context = {
+            "orders": orders
+        }
+        return render(self.request, "order_history.html", context)
+
+        # except Exception as e:
+        #     messages.info(self.request, "You don't have order history")
+        #     return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
+    # def post(self, *args, **kwargs):
+    #     context = {
+
+    #     }
+
+    #     return render(self.request, "all-orders.html", context)
 
 
 class CheckoutView(LoginRequiredMixin, View):
@@ -346,7 +379,7 @@ class PaymentView(LoginRequiredMixin, View):
 
 class HomeView(ListView):
     model = Item
-    paginate_by = 10
+    # paginate_by = 7
     template_name = "home.html"
 
 
@@ -367,14 +400,14 @@ class ItemDetailView(DetailView):
     model = Item
     template_name = "product.html"
 
-
+#  a = 1 if i<100 else 2 if i>100 else 0
 @login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_item, created = OrderItem.objects.get_or_create(
         item=item,
         user=request.user,
-        ordered=False
+        ordered=False,
     )
 
     order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -385,18 +418,18 @@ def add_to_cart(request, slug):
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "This item quantity was updated.")
-            return redirect("core:order-summary")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             order.items.add(order_item)
             messages.info(request, "This item was added to your cart.")
-            return redirect("core:order-summary")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
         messages.info(request, "This item was added to your cart.")
-        return redirect("core:order-summary")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -413,7 +446,8 @@ def remove_from_cart(request, slug):
             order_item = OrderItem.objects.filter(
                 item=item,
                 user=request.user,
-                ordered=False
+                ordered=False,
+                # purchase=item.discount_price if item.discount_price else item.price,
             )[0]
             order.items.remove(order_item)
             messages.info(request, "This item was removed from your cart.")
@@ -431,7 +465,7 @@ def remove_single_item_from_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_qs = Order.objects.filter(
         user=request.user,
-        ordered=False
+        ordered=False,
     )
     if order_qs.exists():
         order = order_qs[0]
@@ -440,7 +474,8 @@ def remove_single_item_from_cart(request, slug):
             order_item = OrderItem.objects.filter(
                 item=item,
                 user=request.user,
-                ordered=False
+                ordered=False,
+                # purchase=item.discount_price if item.discount_price else item.price,
             )[0]
             if order_item.quantity > 1:
                 order_item.quantity -= 1
