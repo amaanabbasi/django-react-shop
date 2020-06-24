@@ -5,6 +5,7 @@
                 <tr>
                     <th>Item sku</th>
                     <th>Item title</th>
+                    <th>Image</th>
                     <th>Item quantity</th>
                     <th>Item final Price</th>
                     <th></th>
@@ -14,11 +15,11 @@
 
             {% for item in order.items.all %}
             <tr>
-                <td>{{item.item.sku}}</td>
-                <td>{{item.item.title}}</td>
+                <td>{{item.ordered_item.sku}}</td>
+                <td>{{item.ordered_item.title}}</td>
+                <td width="9%"><img src="{{item.ordered_item.image.url}}" alt=""></td>
                 <td>{{item.quantity}}</td>
-                <td>{{item.purchase}}</td>
-                <td>{{item.discount}}</td>
+                <td>{{item.get_final_price_o}}</td>
             </tr>
             {% endfor %}
         </tbody>

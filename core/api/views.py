@@ -20,7 +20,7 @@ from .serializers import (
     ItemSerializer, OrderSerializer, ItemDetailSerializer, AddressSerializer,
     PaymentSerializer
 )
-from core.models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile, Variation, ItemVariation
+from core.models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile, Variation, ItemVariation, ItemOrdered
 
 
 import stripe
@@ -82,6 +82,8 @@ class OrderItemDeleteView(DestroyAPIView):
 
 
 class AddToCartView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, *args, **kwargs):
         slug = request.data.get('slug', None)
         variations = request.data.get('variations', [])
@@ -176,6 +178,7 @@ def subtract_item_quantity_from_stock(item):
 
 
 class PaymentView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
 
@@ -228,12 +231,12 @@ class PaymentView(APIView):
             # assign the payment to the order
 
             order_items = order.items.all()
-
-            order_items.update(ordered=True)
             for item in order_items:
                 if item.quantity > item.item.stock_quantity:
                     print("this happend")
                     return Response({"message": "This product is now out of stock"}, status=HTTP_400_BAD_REQUEST)
+
+            order_items.update(ordered=True)
 
             order.ordered = True
             order.payment = payment
@@ -241,7 +244,28 @@ class PaymentView(APIView):
             order.shipping_address = shipping_address
             order.ordered_date = datetime.datetime.now()
             # order.ref_code = create_ref_code()
+            try:
+                for i in order_items:
+                    old_item = ItemOrdered(
+                        price=i.item.price,
+                        title=i.item.title,
+                        sku=i.item.sku,
+                        upc=i.item.upc,
+                        discount_price=i.item.discount_price,
+                        category=i.item.category,
+                        label=i.item.label,
+                        slug=i.item.slug,
+                        description=i.item.description,
+                        image=i.item.image)
+                    old_item.save()
 
+                    i.ordered_item = old_item
+                    i.save()
+
+            except Exception as e:
+                print(e)
+                return Response("Dhappa")
+            # for item in order_items:
             subtract_item_quantity_from_stock(item)
 
             order.save()

@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'corsheaders',
+    'model_clone',
     # 'rest_auth',
     # 'rest_auth.registration',
     'rest_framework',

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views import View
 from django.views.generic import ListView, DetailView
-from core.models import Order, Item, Payment, ImageUploads, Refund, ItemPrice
+from core.models import Order, Item, Payment, ImageUploads, Refund, ItemOrdered
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.admin.views.decorators import staff_member_required
@@ -82,12 +82,12 @@ class DashboardView(PermissionRequiredMixin, View):
         # Order details about 24 hours
         time_24_hours_ago = datetime.datetime.now() - datetime.timedelta(days=1)
         past_24_hours_orders = orders.filter(
-            ordered_date__gte=time_24_hours_ago)
+            ordered_date__gte=time_24_hours_ago).filter(ordered=True)
         total_past_24_hours_orders = past_24_hours_orders.count()
 
         revenue_past_24_hours_orders = 0
         for order in past_24_hours_orders:
-            revenue_past_24_hours_orders += order.get_total()
+            revenue_past_24_hours_orders += order.get_total_ordered()
 
         average_revenue_24_hours = 0
         try:

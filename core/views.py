@@ -1,3 +1,5 @@
+import datetime
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.contrib import messages
@@ -11,7 +13,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
-from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
+from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile, ItemOrdered
 
 import random
 import string
@@ -240,6 +242,23 @@ class CheckoutView(LoginRequiredMixin, View):
             return redirect("core:order-summary")
 
 
+def subtract_item_quantity_from_stock(item):
+    """ args item object of Class Order, Once the payment is made
+        the item's quantity should be deducted in the stock, So that
+        we are not overselling.
+        item : item listed in order.
+        item_in_stock : Is the actual item in the stock.
+    """
+    try:
+        item_in_stock = Item.objects.get(id=item.item.id)
+        item_in_stock.stock_quantity = F('stock_quantity') - item.quantity
+        item_in_stock.save()
+
+    except Exception as e:
+        # send an email to ourselves
+        return("message: Error has occured during updating the stock quantity.")
+
+
 class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
@@ -323,13 +342,43 @@ class PaymentView(LoginRequiredMixin, View):
                 order_items = order.items.all()
                 order_items.update(ordered=True)
                 for item in order_items:
-                    item.save()
+
+                    if item.quantity > item.item.stock_quantity:
+                        print("this happend")
+                        messages.info("This product is out of stock")
+                        return redirect('/')
+                    else:
+                        pass
+                    subtract_item_quantity_from_stock(item)
+
+                order_items.update(ordered=True)
 
                 order.ordered = True
                 order.payment = payment
                 order.ref_code = create_ref_code()
-                order.save()
+                try:
+                    for i in order_items:
+                        old_item = ItemOrdered(
+                            price=i.item.price,
+                            title=i.item.title,
+                            sku=i.item.sku,
+                            upc=i.item.upc,
+                            discount_price=i.item.discount_price,
+                            category=i.item.category,
+                            label=i.item.label,
+                            slug=i.item.slug,
+                            description=i.item.description,
+                            image=i.item.image)
+                        old_item.save()
 
+                        i.ordered_item = old_item
+                        i.save()
+
+                except Exception as e:
+                    print(e)
+                # for item in order_items:
+
+                order.save()
                 messages.success(self.request, "Your order was successful!")
                 return redirect("/")
 

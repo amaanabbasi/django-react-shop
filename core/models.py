@@ -8,6 +8,8 @@ from django.core.validators import MinLengthValidator, MaxValueValidator, MinVal
 import random
 import string
 
+from model_clone import CloneMixin
+
 CATEGORY_CHOICES = (
     ('DR', 'Drink'),
     ('DO', 'Deals & Offers'),
@@ -137,16 +139,46 @@ class ItemVariation(models.Model):
         return self.value
 
 
+# class DeliveredOrder(models.Model):
+
+
+"""
+Edit: Another thing to consider is having a built in way to distinguish orders, customers, 
+etc. e.g. customers always start with 10, orders always start 
+with 20, vendors always start with 30, etc.
+"""
+
+
+class ItemOrdered(models.Model):
+    price = models.FloatField(blank=True, null=True)  # change blank and null
+    title = models.CharField(max_length=100)
+    sku = models.CharField(max_length=8, validators=[
+                           MinLengthValidator(8)], unique=True)
+    upc = models.CharField(max_length=12, validators=[
+                           MinLengthValidator(12)], unique=True, blank=True, null=True)
+    price = models.FloatField()
+    discount_price = models.FloatField(blank=True, null=True)
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    label = models.CharField(choices=LABEL_CHOICES, max_length=1)
+    slug = models.SlugField()
+    description = models.TextField()
+    image = models.ImageField(upload_to=upload_location, blank=True, null=True)
+
+
 class OrderItem(models.Model):
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    item_variations = models.ManyToManyField(ItemVariation)
+    item_variations = models.ManyToManyField(
+        ItemVariation, blank=True, null=True)
     quantity = models.IntegerField(default=1)
     # Should not be blank, itemPrice at time of purchase
     purchase = models.FloatField(blank=True, null=True)
     # Since it can change at later point of time it should be saved
+    ordered_item = models.OneToOneField(
+        ItemOrdered, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return f"{self.quantity} of {self.item.title}"
@@ -165,24 +197,24 @@ class OrderItem(models.Model):
             return self.get_total_discount_item_price()
         return self.get_total_item_price()
 
+    #######################################################
 
-# class DeliveredOrder(models.Model):
+    def get_total_item_price_o(self):
+        return self.quantity * self.ordered_item.price
+
+    def get_total_discount_item_price_o(self):
+        return self.quantity * self.ordered_item.discount_price
+
+    def get_amount_saved_o(self):
+        return self.get_total_item_price_o() - self.get_total_discount_item_price_o()
+
+    def get_final_price_o(self):
+        if self.ordered_item.discount_price:
+            return self.get_total_discount_item_price_o()
+        return self.get_total_item_price_o()
 
 
-"""
-Edit: Another thing to consider is having a built in way to distinguish orders, customers, 
-etc. e.g. customers always start with 10, orders always start 
-with 20, vendors always start with 30, etc.
-"""
-
-
-class ItemPrice(models.Model):
-    item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
-    price = models.FloatField(blank=True, null=True)  # change blank and null
-    date_changed = models.DateTimeField(auto_now=True, blank=True, null=True)
-
-
-class Order(models.Model):
+class Order(CloneMixin, models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     ref_code = models.CharField(
@@ -228,10 +260,20 @@ class Order(models.Model):
     def __str__(self):
         return self.user.username
 
+    # this total represents the total when the order is cart
     def get_total(self):
         total = 0
         for order_item in self.items.all():
             total += order_item.get_final_price()
+        if self.coupon:
+            total -= self.coupon.amount
+        return total
+
+    # this total represents the total when the order is placed
+    def get_total_ordered(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.get_final_price_o()
         if self.coupon:
             total -= self.coupon.amount
         return total

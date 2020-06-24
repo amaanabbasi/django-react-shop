@@ -54,7 +54,7 @@
                             <td><input class="checkbox" type="checkbox" value="{{order.id}}" name="order_id" size="1" />
                             </td>
                             <td width="5%">#{{order.id}}</td>
-                            <td>${{order.get_total}}</td>
+                            <td>${{order.get_total_ordered}}</td>
 
                             <td class="level-right">
                                 {% if order.get_status == "Ordered"%}
