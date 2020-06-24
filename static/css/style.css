@@ -1,0 +1,16 @@
+#tabs-with-content .tabs:not(:last-child) {
+    margin-bottom: 0;
+}
+
+#tabs-with-content .tab-content {
+    padding: 1rem;
+    display: none;
+}
+
+#tabs-with-content .tab-content.is-active {
+    display: block;
+}
+
+.container {
+    max-width : 95%;
+}
