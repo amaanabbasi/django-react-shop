@@ -7,3 +7,4 @@ static
 media
 package-lock.json
 .env
+venv/
