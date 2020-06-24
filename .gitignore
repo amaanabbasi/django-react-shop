@@ -3,7 +3,6 @@ env
 **/__pycache__
 node_modules
 build
-static
 media
 package-lock.json
 .env

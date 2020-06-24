@@ -235,7 +235,9 @@ class PaymentView(APIView):
                 if item.quantity > item.item.stock_quantity:
                     print("this happend")
                     return Response({"message": "This product is now out of stock"}, status=HTTP_400_BAD_REQUEST)
-
+                else:
+                    pass
+                subtract_item_quantity_from_stock(item)
             order_items.update(ordered=True)
 
             order.ordered = True
@@ -266,7 +268,6 @@ class PaymentView(APIView):
                 print(e)
                 return Response("Dhappa")
             # for item in order_items:
-            subtract_item_quantity_from_stock(item)
 
             order.save()
             return Response(status=HTTP_200_OK)

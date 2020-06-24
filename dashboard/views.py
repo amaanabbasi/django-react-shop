@@ -70,6 +70,17 @@ class DashboardView(PermissionRequiredMixin, View):
     permission_required = 'is_staff'
 
     def get(self, request):
+        total_active_orders = None
+        total_orders = None
+        total_customers = None
+        total_products = None
+        total_revenue = None
+        total_past_24_hours_orders = None
+        revenue_past_24_hours_orders = None
+        average_revenue_24_hours = None
+        average_total_revenue = None
+        total_stock_items = None
+        total_customers_time_24_hours_ago = None
 
         # Items or stock
         stock_items = Item.objects.all()
@@ -92,8 +103,8 @@ class DashboardView(PermissionRequiredMixin, View):
         average_revenue_24_hours = 0
         try:
             average_revenue_24_hours = revenue_past_24_hours_orders/total_past_24_hours_orders
-        except Exception as err:
-            logging.debug(str(err) + ": DashboardView")
+        except Exception as e:
+            logging.debug(str(e) + ": DashboardView")
 
         products = Item.objects.all()
         total_products = products.count()
@@ -114,7 +125,7 @@ class DashboardView(PermissionRequiredMixin, View):
             total_revenue += p.amount
         try:
             average_total_revenue = total_revenue // total_orders
-        except ZeroDivisionError:
+        except ZeroDivisionError as err:
             logging.error(str(err) + ": DashboardView")
 
         # Active Orders - Orders that are not received by the customer
