@@ -361,8 +361,6 @@ class PaymentView(LoginRequiredMixin, View):
                         old_item = ItemOrdered(
                             price=i.item.price,
                             title=i.item.title,
-                            sku=i.item.sku,
-                            upc=i.item.upc,
                             discount_price=i.item.discount_price,
                             category=i.item.category,
                             label=i.item.label,
@@ -373,13 +371,15 @@ class PaymentView(LoginRequiredMixin, View):
 
                         i.ordered_item = old_item
                         i.save()
-
+                    order.save()
+                    messages.success(
+                        self.request, "Your order was successful!")
                 except Exception as e:
                     print(e)
+                    messages.danger(
+                        self.request, "Some problem Occured")
                 # for item in order_items:
 
-                order.save()
-                messages.success(self.request, "Your order was successful!")
                 return redirect("/")
 
             except stripe.error.CardError as e:

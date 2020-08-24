@@ -152,10 +152,6 @@ with 20, vendors always start with 30, etc.
 class ItemOrdered(models.Model):
     price = models.FloatField(blank=True, null=True)  # change blank and null
     title = models.CharField(max_length=100)
-    sku = models.CharField(max_length=8, validators=[
-                           MinLengthValidator(8)], unique=True)
-    upc = models.CharField(max_length=12, validators=[
-                           MinLengthValidator(12)], unique=True, blank=True, null=True)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
