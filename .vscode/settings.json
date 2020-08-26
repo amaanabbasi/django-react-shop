@@ -1,6 +1,5 @@
 {
-    "python.pythonPath": "venv/bin/python",
-    "editor.formatOnSave": true,
+  "editor.formatOnSave": true,
     "python.linting.pycodestyleEnabled": true,
     "python.linting.pylintPath": "pylint",
     "python.linting.pylintArgs": ["--load-plugins", "pylint_django"],
