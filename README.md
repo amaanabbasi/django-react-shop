@@ -1,11 +1,11 @@
 
-Features:
+# Features:
 - User Authentication.
 - Admin panel, can manage orders, refunds and  add, update, create and delete products. 
 - landing page with a carousel. 
 - Payments - For testing payments i have integrated stripe. It's a nice and easy way to test payment functionality.
 - It has also has a integrated API for frontend frameworks.
-- Also Has a react frontend
+- Also have a react frontend
 
 # Installation
 
