@@ -7,6 +7,9 @@
 - It has also has a integrated API for frontend frameworks.
 - Also have a react frontend
 
+# Live 
+* https://amaanx.pythonanywhere.com/
+
 # Installation
 
 `python3 -m venv venv`
