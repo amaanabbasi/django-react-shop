@@ -33,3 +33,8 @@
 Functions, Features, Pages, links
 
 https://youtu.be/tj_vc1MSj2k
+
+Credits: 
+- https://github.com/mattfreire
+- https://github.com/justdjango
+- https://www.youtube.com/channel/UCRM1gWNTDx0SHIqUJygD-kQ
