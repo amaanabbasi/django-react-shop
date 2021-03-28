@@ -31,6 +31,28 @@
 ## Order List
 ![Screenshot from 2021-03-27 17-47-21](https://user-images.githubusercontent.com/30196830/112720486-ad0f7c80-8f24-11eb-88f5-c8ffe253857f.png)
 
+# URLs
+
+```
+api/
+[name='home']
+checkout/ [name='checkout']
+order-summary/ [name='order-summary']
+product/<slug>/ [name='product']
+add-to-cart/<slug>/ [name='add-to-cart']
+add-coupon/ [name='add-coupon']
+remove-from-cart/<slug>/ [name='remove-from-cart']
+remove-item-from-cart/<slug>/ [name='remove-single-item-from-cart']
+payment/<payment_option>/ [name='payment']
+request-refund/ [name='request-refund']
+order-history [name='order-history']
+accounts/
+dashboard/
+auth/
+auth/registration/
+accounts/profile/ [name='profile']
+```
+
 # Video OverView 
 
 Functions, Features, Pages, links
